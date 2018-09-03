@@ -3,7 +3,7 @@
   
 # Push
 
-在RxJS中，Observable相当于Push的流，与ES6内置对象Generator的Pull有所不同。
+在RxJS中，Observable相当于Push的流，与ES6内置对象Generator的Pull流有所不同。
 Observable的Push流，有开始(cold或hot)，有结束(complete或error)，由next控制数据流动。在流的性质上与Generator无异。
 将流看作是数组，可以进行一般化的聚合(reduce...),投影(map...),过滤(filter...)等等操作，Observable因此也具备这种功能，甚至扩展了更多常用的函数。
 因此RxJS也更加复杂，学习曲线陡峭。
