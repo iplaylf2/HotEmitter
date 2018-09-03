@@ -37,4 +37,4 @@ HotEmit不存在开始和结束，由emit推动的Push流可以视为一个漫�
 四、使用line.connect函数绑定action，捕获emit函数发送的数据。
 五、line.connect绑定action时会返回disconnect函数，使用disconnect函数可以取消绑定action。
 
-[demo]（https://github.com/Iplaylf2/HotEmit/blob/master/demo.html）
+[demo](https://github.com/Iplaylf2/HotEmit/blob/master/demo.html)
