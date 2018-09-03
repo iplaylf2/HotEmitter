@@ -7,6 +7,7 @@
 <input id='buttonB' type="button" value="alert" />
 <script>
     var { GetEmitter, LineExtensionMethod, Merge, Zip } = HotEmit;
+    //防抖demo
     var [emitA, lineA] = GetEmitter();
     buttonA.onclick = emitA;
 
@@ -26,7 +27,9 @@
         .connect(v => {
             spanA.innerText = v;
         });
-    //
+    //reciver1();   //解除绑定
+
+    //xx demo
     var [emitB, lineB] = GetEmitter();
     var [emitC, lineC] = GetEmitter();
     textB.onkeypress = emitB;
