@@ -1,0 +1,39 @@
+<script src="./HotEmit.js"></script>
+<input id='buttonA' type="button" value="click" />
+<label>点击次数（1秒最多一次）:</label>
+<span id='spanA'>0</span>
+<p></p>
+<input id='textB' type="text" />
+<input id='buttonB' type="button" value="alert" />
+<script>
+    var { GetEmitter, LineExtensionMethod, Merge, Zip } = HotEmit;
+    var [emitA, lineA] = GetEmitter();
+    buttonA.onclick = emitA;
+
+    var lastTime = 0;
+    var reciver1 = lineA.filter(() => {
+        var now = Date.now();
+        if (now - lastTime > 1000) {
+            lastTime = now;
+            return true;
+        }
+        else {
+            return false;
+        }
+    })
+        .scan(count => count + 1, 0)
+        .map(v => v.toString())
+        .connect(v => {
+            spanA.innerText = v;
+        });
+    //
+    var [emitB, lineB] = GetEmitter();
+    var [emitC, lineC] = GetEmitter();
+    textB.onkeypress = emitB;
+    buttonB.onclick = emitC;
+
+    var reciver2 = Merge([lineB.filter(e => e.keyCode === 13), lineC]).connect(() => {
+        alert(textB.value);
+    });
+
+</script>
