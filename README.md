@@ -5,8 +5,8 @@
 
 在RxJS中，Observable相当于Push的流，与ES6内置对象Generator的Pull流有所不同。   
 Observable的Push流，有开始(cold或hot)，有结束(complete或error)，由next控制数据流动。在流的性质上与Generator无异。    
-将流看作是数组，可以进行一般化的聚合(reduce...),投影(map...),过滤(filter...)等等操作，Observable因此也具备这种功能，甚至扩展了更多常用的函数。    
-因此RxJS也更加复杂，学习曲线陡峭。    
+将流看作是数组，可以进行一般化的聚合(reduce...),投影(map...),过滤(filter...)等等操作，Observable因此也具备这些功能，甚至扩展了更多常用的函数。    
+可是也由于功能的强大，RxJS变得更加复杂，学习曲线更陡峭。    
 
 # 不存在开始和结束的HotEmit
 使用GetEmitter可以创建emitter对象。     
@@ -21,7 +21,8 @@ line.connect(action);
 emit(value);
 ``` 
 emit是一个函数，用于发送信号,line相当于传输信号的导线。     
-HotEmit不存在开始和结束，由emit推动的Push流可以视为一个漫长的流中的一段，因此我们不用担心数据是cold还是hot的，他总是hot的。     
+HotEmit也是基于Push流设计的，但它不存在开始和结束的状态，由emit推动的Push流可以视为一个漫长的流中的一段。     
+因此我们不用担心数据是cold还是hot的，他总是hot的。     
 没有cold数据是对比RxJS的第一个简化。     
 由于HotEmit的Push流不存在开始和结束，因此它不能拥有聚合函数以及一些跟流元素位置相关的函数（如slice)。     
 所以，HotEmit对流的操作函数只有filter，map，scan，Merge以及Zip。     
