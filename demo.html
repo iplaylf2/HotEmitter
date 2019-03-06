@@ -1,4 +1,4 @@
-<script src="./HotEmit.js"></script>
+<script src="./HotEmitter.js"></script>
 <input id='buttonA' type="button" value="click" />
 <label>点击次数（1秒最多一次）:</label>
 <span id='spanA'>0</span>
@@ -6,9 +6,9 @@
 <input id='textB' type="text" />
 <input id='buttonB' type="button" value="alert" />
 <script>
-    var { GetEmitter, LineExtensionMethod, Merge, Zip } = HotEmit;
+    var { getEmitter, merge, } = HotEmitter;
     //防抖demo
-    var [emitA, lineA] = GetEmitter();
+    var [emitA, lineA] = getEmitter();
     buttonA.onclick = emitA;
 
     var lastTime = 0;
@@ -30,12 +30,12 @@
     //reciver1();   //解除绑定
 
     //xx demo
-    var [emitB, lineB] = GetEmitter();
-    var [emitC, lineC] = GetEmitter();
+    var [emitB, lineB] = getEmitter();
+    var [emitC, lineC] = getEmitter();
     textB.onkeypress = emitB;
     buttonB.onclick = emitC;
 
-    var reciver2 = Merge([lineB.filter(e => e.keyCode === 13), lineC]).connect(() => {
+    var reciver2 = merge(lineB.filter(e => e.keyCode === 13), lineC).connect(() => {
         alert(textB.value);
     });
 
