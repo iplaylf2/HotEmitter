@@ -77,6 +77,11 @@ const HotEmitter = (() => {
         return [Emitter, LoadEmitter];
     })();
 
+    const getEmitter = function () {
+        var { emit, line } = new Emitter();
+        return [emit, line];
+    };
+
     const ILine = (() => {
         class ILine {
             connect() { }
@@ -198,6 +203,7 @@ const HotEmitter = (() => {
 
     return {
         Emitter,
+        getEmitter,
         makeExtension,
         merge,
         zip
