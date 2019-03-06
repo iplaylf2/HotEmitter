@@ -35,4 +35,11 @@ HotEmitter核心设计思想也是Push的流，但它不存在开始和结束的
 四、使用line.connect函数绑定receiver，捕获emit函数发送的数据。    
 五、line.connect绑定receiver时会返回disconnect函数，使用disconnect函数可以取消绑定receiver。    
 
-[demo](https://github.com/Iplaylf2/HotEmit/blob/master/demo.html)
+一个简单的[demo](https://github.com/Iplaylf2/HotEmit/blob/master/demo.html)
+
+# HotEmitter的重构
+用法基本没变，api甚至只是改了开头字母。  
+把一些代码结构改为比较友善的class。  
+增加了很重要的一个机制，receiver产生的异常不会立刻抛出，只会收集起来，最后在所有receiver都处理完订阅才抛出。这一点跟DOM的addEventListener做法相近，一个观察者能否收到订阅不应被其他观察者影响。  
+其实观察者模式应该处理阻塞么？不过目前前端js单线程来看，面对观察者造成的阻塞也是毫无办法的。  
+想起ReactiveX调度器可以控制观察者的订阅处理是并发的（多线程的），异步的，还是当前线程的。如果在其他有多线程的平台实现HotEmitter……
