@@ -77,11 +77,6 @@ const HotEmitter = (() => {
         return [Emitter, LoadEmitter];
     })();
 
-    const getEmitter = function () {
-        var { emit, line } = new Emitter();
-        return [emit, line];
-    };
-
     const ILine = (() => {
         class ILine {
             connect() { }
@@ -109,7 +104,7 @@ const HotEmitter = (() => {
                         var produce = seed;
                         return value => {
                             produce = accumulator(produce, value);
-                            emitterB(produce);
+                            emitB(produce);
                         };
                     }
                 );
@@ -124,6 +119,8 @@ const HotEmitter = (() => {
 
         class Line extends ILine {
             constructor(addReceiver) {
+                super();
+
                 const _private = {};
                 privateMap.set(this, _private);
 
@@ -141,7 +138,7 @@ const HotEmitter = (() => {
 
     const makeExtension = function (lineA, adapter) {
         const emitterB = new LoadEmitter();
-        const receiverAdapter = adapter(emitterB.emit);
+        const receiverAdapter = adapter(emitterB.emit.bind(emitterB));
         var disconnect = () => { };
 
         emitterB.beLoad = function () {
@@ -157,9 +154,10 @@ const HotEmitter = (() => {
     const merge = function (...lineArray) {
         const emitterB = new LoadEmitter();
         var disconnectArray = [];
+        const emitB = emitterB.emit.bind(emitterB);
 
         emitterB.beLoad = function () {
-            disconnectArray = lineArray.map(line => line.connect(emitterB.emit));
+            disconnectArray = lineArray.map(line => line.connect(emitB));
         };
         emitterB.beUnload = function () {
             for (var disconnect of disconnectArray) {
@@ -201,11 +199,15 @@ const HotEmitter = (() => {
         return emitterB.line;
     };
 
+    const getEmitter = function () {
+        var emitter = new Emitter();
+        return [emitter.emit.bind(emitter), emitter.line];
+    };
+
     return {
-        Emitter,
-        getEmitter,
         makeExtension,
         merge,
-        zip
+        zip,
+        getEmitter,
     };
 })();
