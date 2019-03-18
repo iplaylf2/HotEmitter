@@ -1,7 +1,5 @@
 const HotEmitter = (() => {
-    const [Emitter, LoadEmitter] = (() => {
-        const privateMap = new WeakMap();
-
+    const [Emitter, LoadEmitter] = (privateMap => {
         class Emitter {
             constructor() {
                 const _private = {};
@@ -75,66 +73,57 @@ const HotEmitter = (() => {
         }
 
         return [Emitter, LoadEmitter];
-    })();
+    })(new WeakMap());
 
-    const ILine = (() => {
-        class ILine {
-            connect() { }
-            filter(predicate) {
-                return makeExtension(
-                    this,
-                    emitB =>
-                        value => {
-                            if (predicate(value)) {
-                                emitB(value);
-                            }
+    class ILine {
+        connect() { }
+        filter(predicate) {
+            return makeExtension(
+                this,
+                emitB =>
+                    value => {
+                        if (predicate(value)) {
+                            emitB(value);
                         }
-                );
-            }
-            map(selector) {
-                return makeExtension(
-                    this,
-                    emitB => value => emitB(selector(value))
-                );
-            }
-            scan(accumulator, seed) {
-                return makeExtension(
-                    this,
-                    emitB => {
-                        var produce = seed;
-                        return value => {
-                            produce = accumulator(produce, value);
-                            emitB(produce);
-                        };
                     }
-                );
-            }
+            );
         }
-
-        return ILine;
-    })();
-
-    const Line = (() => {
-        const privateMap = new WeakMap();
-
-        class Line extends ILine {
-            constructor(addReceiver) {
-                super();
-
-                const _private = {};
-                privateMap.set(this, _private);
-
-                _private.addReceiver = addReceiver;
-            }
-            connect(receiver) {
-                const _private = privateMap.get(this);
-
-                return _private.addReceiver(receiver);
-            }
+        map(selector) {
+            return makeExtension(
+                this,
+                emitB => value => emitB(selector(value))
+            );
         }
+        scan(accumulator, seed) {
+            return makeExtension(
+                this,
+                emitB => {
+                    var produce = seed;
+                    return value => {
+                        produce = accumulator(produce, value);
+                        emitB(produce);
+                    };
+                }
+            );
+        }
+    }
 
-        return Line;
-    })();
+    const Line = (privateMap => class Line extends ILine {
+        constructor(addReceiver) {
+            super();
+
+            const _private = {};
+            privateMap.set(this, _private);
+
+            _private.addReceiver = addReceiver;
+        }
+        connect(receiver) {
+            const _private = privateMap.get(this);
+
+            return _private.addReceiver(receiver);
+        }
+    }
+    )(new WeakMap());
 
     const makeExtension = function (lineA, adapter) {
         const emitterB = new LoadEmitter();
