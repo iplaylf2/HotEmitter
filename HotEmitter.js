@@ -59,8 +59,8 @@ const HotEmitter = (() => {
                         if (unload && loadBefore) {
                             _this.beUnload();
                         }
-                    }
-                }
+                    };
+                };
 
                 this.line = new Line(addReceiver);
                 this.beLoad = () => { };
