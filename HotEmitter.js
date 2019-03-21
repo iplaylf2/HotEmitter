@@ -106,6 +106,21 @@ const HotEmitter = (() => {
                 }
             );
         }
+        pipe(emitterArray) {
+            return makeExtension(
+                this,
+                emitB => {
+                    const emitterProxy = new Emitter();
+                    var line = emitterProxy.line;
+                    for (let emitter of emitterArray) {
+                        line.connect(emitter.emit.bind(emitter));
+                        line = emitter.line;
+                    }
+                    line.connect(emitB);
+                    return emitterProxy.emit.bind(emitterProxy);
+                }
+            );
+        }
     }
 
     const Line = (privateMap => class Line extends ILine {
